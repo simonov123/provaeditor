@@ -4,8 +4,10 @@ import java.awt.Container;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.Socket;
@@ -16,6 +18,7 @@ import javax.swing.JFrame;
 import javax.swing.JTextField;
 
 public class Sender {
+	private String csvpath="/home/";
 	public void sendfile(File file) throws UnknownHostException, IOException {
 		JFrame putfr=new JFrame();
 		Container putc=new Container();
@@ -27,8 +30,8 @@ public class Sender {
 		JButton ok=new JButton ("ok");
 		putc.add(ipin);
 		putc.add(ok);
-		putfr.setSize(100,300);
-		putc.setSize(100,300);
+		putfr.setSize(300,100);
+		putc.setSize(300,100);
 		putfr.show();
 		ok.addActionListener(new ActionListener() {
 
@@ -36,16 +39,22 @@ public class Sender {
 			public void actionPerformed(ActionEvent e) {
 			try {
 				Socket socket=new Socket(ipin.getText(),9888);
-				byte[] buffer=new byte[4096];
+				System.out.println("verifica file");
+				byte[] filecontent=new byte[(int)file.length()];
+				FileInputStream ver=new FileInputStream(file);
+				ver.read(filecontent);
+				System.out.println("content:"+new String(filecontent));
+				ver.close();
+				String filename=file.getName();
+                System.out.println("invio di:"+filename);
 				FileInputStream input=new FileInputStream(file);
+				System.out.println(filecontent);
 				OutputStream out=socket.getOutputStream();
 				int bytesRead;
 				while((bytesRead=input.read())!=-1) {
-					out.write(buffer,0,bytesRead);
-					if((bytesRead=input.read())==4096) {
-						System.out.println(buffer);
-					}
+					out.write(filecontent);
 				}
+				System.out.println(filecontent);
 				input.close();
 				out.close();
 				socket.close();
