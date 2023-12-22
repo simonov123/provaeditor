@@ -7,6 +7,7 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -29,10 +30,17 @@ public class recieve {
 		File recfile=new File("recfile.txt");
 		FileOutputStream out=new FileOutputStream(recfile);
 		byte[] buffer=new byte[4096];
+		System.out.println(buffer);
 		int bytesRead;
 		while((bytesRead=input.read(buffer))!=-1) {
 			out.write(buffer,0,bytesRead);
 		}
+		String buff=new String(buffer);
+		System.out.println(buff);
+		FileWriter wr2=new FileWriter("recfile.txt");
+		wr2.write(buff);
+		wr2.flush();
+		wr2.close();
 		input.close();
 		out.close();
 		socket.close();
