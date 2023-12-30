@@ -34,6 +34,7 @@ import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollBar;
@@ -62,13 +63,22 @@ public class frontend {
 	int saveflag=0;
 	public int home() throws IOException
 	{
-		r.setlang(lang);
+		String langs=r.setlang(lang);
+		System.out.println(langs);
 		JFrame homeframe=new JFrame();
 		homeframe.resize(200,300);
 		Container c=homeframe.getContentPane();
 		GridLayout layout=new GridLayout(2,1,50,50);
 		JButton nuovo=new JButton(lang.newfilestr);
 		JButton apri=new JButton(lang.openfilestr);
+		if(langs.equals("italiano")) {
+			nuovo.setText(lang.itnewfilestr);
+			apri.setText(lang.itopenfilestr);
+		}
+		if(langs.equals("Русский")) {
+			nuovo.setText(lang.runewfilestr);
+			apri.setText(lang.ruopenfilestr);
+		}
 		nuovo.addMouseListener(new 
 			       java.awt.event.MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
@@ -115,8 +125,9 @@ public class frontend {
 		pat=filpath[1];
 		d.fopen(filename,pat);
 	}
-	public String[] fileselect() throws InterruptedException
+	public String[] fileselect() throws InterruptedException, IOException
 	{
+		String langs=r.setlang(lang);
 		JFrame homeframe=new JFrame();
 		Container m=homeframe.getContentPane();
 		homeframe.setSize(200,450);
@@ -124,8 +135,8 @@ public class frontend {
 		m.setLayout(layout);
 	    JButton committ=new JButton(lang.createstr);
 	    JButton sh=new JButton(lang.choosestr);
-		JLabel path=new JLabel("path");
-		JLabel name=new JLabel("filename");
+		JLabel path=new JLabel(lang.pathstr);
+		JLabel name=new JLabel(lang.filenamestr);
 		m.add(name);
 		m.add(namefield);
 		m.add(path);
@@ -137,6 +148,18 @@ public class frontend {
 		namefield.setSize(30,150);
 		pathfield.setSize(30,150);
 		committ.setSize(30,150);
+		if(langs.equals("italiano")) {
+			name.setText(lang.itfilenamestr);
+			path.setText(lang.itpathstr);
+			committ.setText(lang.itcreatestr);
+			sh.setText(lang.itchoosestr);
+		}
+		if(langs.equals("Русский")) {
+			name.setText(lang.rufilenamestr);
+			path.setText(lang.rupathstr);
+			committ.setText(lang.rucreatestr);
+			sh.setText(lang.ruchoosestr);
+		}
 		homeframe.show();
 		committ.addMouseListener(new java.awt.event.MouseAdapter()
 		{
@@ -184,6 +207,7 @@ public class frontend {
 	
 	public String editor_interface(File file) throws IOException, CsvValidationException
 	{
+		String langs=r.setlang(lang);
 		System.out.println(file.getName());
 		filename=file.getName();
 		pat=file.getPath();
@@ -204,8 +228,22 @@ public class frontend {
 		JButton paste=new JButton(lang.paststr);
 		JButton sv=new JButton(lang.savestr);
 		JButton cred=new JButton("credits");
-		JButton condf=new JButton("share");
-		JButton print=new JButton("recieve");
+		JButton condf=new JButton(lang.sharestr);
+		JButton print=new JButton(lang.recievestr);
+		if(langs.equals("italiano")) {
+			copy.setText(lang.itcopystr);
+			paste.setText(lang.itpaststr);
+			sv.setText(lang.itsavestr);
+			condf.setText(lang.itsharestr);
+			print.setText(lang.itrecievestr);
+		}
+		if(langs.equals("Русский")) {
+			copy.setText(lang.rucopystr);
+			paste.setText(lang.rupaststr);
+			sv.setText(lang.rusavestr);
+			condf.setText(lang.rusharestr);
+			print.setText(lang.rurecievestr);
+		}
 	    scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 	    editorframe.add(scroll);
 	    j.add(tools);
@@ -215,7 +253,7 @@ public class frontend {
 		fontsel.setSize(50,100);
 		System.out.println(setf.getName()+setf.getSize());
 		buff.setFont(setf);
-		buff.setSize(650,420);
+		buff.setSize(770,420);
 		buff.setLineWrap(true);
 	    buff.setEditable(true);
 	    buff.setWrapStyleWord(true);
@@ -293,7 +331,7 @@ public class frontend {
 			   crfr.setSize(500,200);
 			   crpn.setSize(500,200);
 			   crfr.setTitle("credits");
-			   String gitlink="https://github.com/simonov123/ciao/tree/main/provaeditor/src/provaeditor";
+			   String gitlink="https://github.com/simonov123/provaeditor";
 			   JLabel credits1=new JLabel("an italian 22 y.o programmer inspired by a princess");
 			   JLabel credits2=new JLabel("btw,she's a programmer too");
 			   JLabel credits3=new JLabel(gitlink);
@@ -315,11 +353,17 @@ public class frontend {
 
 		@Override
 		public void actionPerformed(ActionEvent ac5) {
+			JOptionPane.showMessageDialog(null,"Make sure that the reciever has pressed recieve before");
 			File sendf=new File(pat);
 			System.out.println("invio:"+sendf.getName());
 			Sender shr=new Sender();
 			try {
-				shr.sendfile(sendf);
+				if(sendf.length()<=80000) {
+					shr.sendfile(sendf);
+				}
+				if(sendf.length()>80000) {
+					JOptionPane.showMessageDialog(null,"MAX FILE SIZE 80KB");
+				}
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -333,6 +377,11 @@ public class frontend {
 			recieve rec=new recieve();
 			try {
 				File recf=rec.recieve();
+				JOptionPane.showMessageDialog(null,"recieved!");
+				String tit="insert new file title";
+				String newnam=JOptionPane.showInputDialog(tit);
+				File recfdef=new File(newnam+".txt");
+				recf.renameTo(recfdef);
 			} catch (IOException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
@@ -341,8 +390,8 @@ public class frontend {
 		}
 		   
 	   });
-	   editorframe.setSize(750,500);
-		j.setSize(750,500);
+	   editorframe.setSize(870,500);
+		j.setSize(870,500);
 	    sv.setSize(50,80);
 	    editorframe.show();
 	    return buffer;

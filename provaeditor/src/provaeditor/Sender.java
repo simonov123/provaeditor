@@ -10,6 +10,7 @@ import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.net.DatagramSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
@@ -45,15 +46,14 @@ public class Sender {
 				ver.read(filecontent);
 				System.out.println("content:"+new String(filecontent));
 				ver.close();
+				socket.setReceiveBufferSize(filecontent.length*50);
 				String filename=file.getName();
                 System.out.println("invio di:"+filename);
 				FileInputStream input=new FileInputStream(file);
 				System.out.println(filecontent);
 				OutputStream out=socket.getOutputStream();
 				int bytesRead;
-				while((bytesRead=input.read())!=-1) {
-					out.write(filecontent);
-				}
+				out.write(filecontent);
 				System.out.println(filecontent);
 				input.close();
 				out.close();

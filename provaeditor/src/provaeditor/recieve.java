@@ -4,6 +4,7 @@ import java.awt.Container;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -29,13 +30,14 @@ public class recieve {
 		InputStream input=socket.getInputStream();
 		File recfile=new File("recfile.txt");
 		FileOutputStream out=new FileOutputStream(recfile);
-		byte[] buffer=new byte[4096];
+		byte[] buffer=new byte[100000000];
 		System.out.println(buffer);
 		int bytesRead;
 		while((bytesRead=input.read(buffer))!=-1) {
 			out.write(buffer,0,bytesRead);
 		}
 		String buff=new String(buffer);
+		buff=buff.replaceAll("\u0000", "");
 		System.out.println(buff);
 		FileWriter wr2=new FileWriter("recfile.txt");
 		wr2.write(buff);

@@ -14,12 +14,14 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.CharBuffer;
+import java.util.Scanner;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileSystemView;
 
 public class runtime {
 	Strings ss=new Strings();
+	String selang;
 	private static String filename;
 	private String csvpath="/home/";
 	frontend inter=new frontend();
@@ -29,33 +31,23 @@ public class runtime {
 		this.setlang(ss);
 		this.interfacecaller();
 	}
-	public Strings setlang(Strings ss) throws IOException {
+	public String setlang(Strings ss) throws IOException {
 		System.out.println("lang");
 		File langfile=new File("/home/"+System.getenv("USER")+"/lang.txt");
 		if(langfile.exists()==true)
 		{
-			FileReader langreader=new FileReader(langfile);
-			String lang=langreader.toString();
+			Scanner scanner=new Scanner(langfile);
+			String lang=scanner.nextLine();
+			scanner.close();
 			System.out.println(lang);
-			if(lang=="Italiano")
-			{
-				ss.setit();
-				langreader.close();
-				return ss;
-			}
-			if(lang=="Русский")
-			{
-				ss.setru();
-				langreader.close();
-				return ss;
-			}
+			return lang;
 		}
 		if(langfile.exists()==false) {
 			JFrame langframe=new JFrame();
 			Container langc=new Container();
 			langc=langframe.getContentPane();
-			langframe.setSize(100,200);
-			langc.setSize(100,200);
+			langframe.setSize(200,100);
+			langc.setSize(200,100);
 			langframe.setTitle("language");
 			String [] langlist= {"Italiano","English","Русский"};
 			JComboBox<String> langbox=new JComboBox<>(langlist);
@@ -65,17 +57,10 @@ public class runtime {
 				@Override
 				public void actionPerformed(ActionEvent acb) {
 					 String selectedlang=langbox.getSelectedItem().toString();
+					 selang=selectedlang;
 					 try {
 						FileWriter lff=new FileWriter(langfile);
 						lff.write(selectedlang);
-						if(selectedlang=="Italiano")
-						{
-							ss.setit();
-						}
-						if(selectedlang=="Русский")
-						{
-							ss.setru();
-						}
 						lff.flush();
 						lff.close();
 					} catch (IOException e) {
@@ -83,14 +68,12 @@ public class runtime {
 						e.printStackTrace();
 					}
 				}
-				
 			});
-			langframe.resize(100,200);
-			langc.resize(100,200);
+			langframe.resize(200,100);
+			langc.resize(200,100);
 			langframe.show();
 		}
-		return ss;
-		
+		return selang;
 	}
 	int selectfile() throws InterruptedException, IOException, CsvValidationException
 	{
