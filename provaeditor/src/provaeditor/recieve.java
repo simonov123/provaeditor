@@ -28,7 +28,7 @@ public class recieve {
 		String add=socket.getInetAddress().toString();
 		System.out.println("connesso con:"+add);
 		InputStream input=socket.getInputStream();
-		File recfile=new File("recfile.txt");
+		File recfile=new File("/home/"+System.getenv("USER")+"/"+"recfile.txt");
 		FileOutputStream out=new FileOutputStream(recfile);
 		byte[] buffer=new byte[100000000];
 		System.out.println(buffer);
@@ -39,7 +39,7 @@ public class recieve {
 		String buff=new String(buffer);
 		buff=buff.replaceAll("\u0000", "");
 		System.out.println(buff);
-		FileWriter wr2=new FileWriter("recfile.txt");
+		FileWriter wr2=new FileWriter("/home/"+System.getenv("USER")+"/"+"recfile.txt");
 		wr2.write(buff);
 		wr2.flush();
 		wr2.close();

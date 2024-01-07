@@ -63,6 +63,8 @@ public class runtime {
 						lff.write(selectedlang);
 						lff.flush();
 						lff.close();
+						JOptionPane.showMessageDialog(null,"limgua impostata,riavviare il programma/language set restart the program/установить язык, перезапустить программу");
+						
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();

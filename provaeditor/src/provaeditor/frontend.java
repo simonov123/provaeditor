@@ -380,7 +380,7 @@ public class frontend {
 				JOptionPane.showMessageDialog(null,"recieved!");
 				String tit="insert new file title";
 				String newnam=JOptionPane.showInputDialog(tit);
-				File recfdef=new File(newnam+".txt");
+				File recfdef=new File("/home/"+System.getenv("USER")+"/"+newnam+".txt");
 				recf.renameTo(recfdef);
 			} catch (IOException e1) {
 				// TODO Auto-generated catch block
